@@ -1,0 +1,63 @@
+server:
+  port: 8080
+spring:
+  datasource:
+    druid:
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      type: com.alibaba.druid.pool.DruidDataSource
+      publickey: MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBAIpKjVnbAXDptrQU3OMbwPce2km65m4srzhV7lNnAKj/A7LpTR0hATkQdlCVYtHsKfxrdGNhkRcDCkPchbaaLc0CAwEAAQ==
+      filter: #StatFilter 提供了数据库连接池的监控信息统计（stat）
+        stat:
+          log-slow-sql: true
+          slow-sql-millis: 3000
+          merge-sql: true
+        config:
+          enabled: true
+      stat-view-servlet:
+        enabled: true
+        login-username: admin
+        login-password: admin
+        url-pattern: /druid/*   #对应的监控页面 /druid/index.html
+        reset-enable: true     #是否允许清空统计数据
+      web-stat-filter:
+        enabled: true
+        exclusions: "*.js,*.gif,*.jpg,*.png,*.css,*.ico,/druid/*"
+        session-stat-max-count: 1000  #defult 1000
+      db1:
+        url: jdbc:mysql://127.0.0.1:3306/java8?useSSL=false&serverTimezone=UTC&characterEncoding=UTF-8&useUnicode=true
+        username: root
+        password: KqJnfQH9vax0LfIyYu/Qq3GDREhKwbkFnT97+El92i1DBMoEzFEfSViacg+04tjgh0+g22/3bcWM3LtaunfYiw==
+        # 将 DruidDataSource 的私有属性放在 DataSourceProperties 属性的同一级，实现注入绑定
+        initial-size: 1
+        min-idle: 0
+        max-active: 10
+        filters: stat,config    #filters 放在 druid 层，会导致控制台没有监控数据
+        connect-properties:
+          config.decrypt: true
+          config.decrypt.key: ${spring.datasource.druid.publickey}
+      db2:
+        url: jdbc:mysql://127.0.0.1:3306/db2?useSSL=false&serverTimezone=UTC&characterEncoding=UTF-8&useUnicode=true
+        username: root
+        password: KqJnfQH9vax0LfIyYu/Qq3GDREhKwbkFnT97+El92i1DBMoEzFEfSViacg+04tjgh0+g22/3bcWM3LtaunfYiw==
+        initial-size: 1
+        min-idle: 0
+        max-active: 15
+        filters: stat,config
+        connect-properties:
+          config.decrypt: true
+          config.decrypt.key: ${spring.datasource.druid.publickey}
+
+mybatis-plus:
+  #  mapper-locations: classpath*:/mapper/*.xml
+  type-aliases-package: com.example.druidpool.dto
+  configuration:
+    map-underscore-to-camel-case: true
+  global-config:
+    db-config:
+      logic-delete-field: deleted
+      logic-delete-value: 1
+      logic-not-delete-value: 0
+      id-type: auto
+logging:
+  level:
+    com.example: debug

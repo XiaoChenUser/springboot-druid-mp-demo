@@ -1,0 +1,72 @@
+server:
+  port: 8081
+spring:
+  datasource:
+    name: default
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://127.0.0.1:3306/java8?useSSL=false&serverTimezone=UTC&characterEncoding=UTF-8&useUnicode=true&allowPublicKeyRetrieval=true
+    username: root
+    password: KqJnfQH9vax0LfIyYu/Qq3GDREhKwbkFnT97+El92i1DBMoEzFEfSViacg+04tjgh0+g22/3bcWM3LtaunfYiw==
+    type: com.alibaba.druid.pool.DruidDataSource
+    druid:
+      initial-size: 1
+      min-idle: 0
+      max-active: 20
+      validation-query: select 1    #用来检测连接是否有效的sql，要求是一个查询语句，常用select 'x'。如果validationQuery为null，testOnBorrow、testOnReturn、testWhileIdle都不会起作用。
+      validation-query-timeout: 2   #单位：秒，检测连接是否有效的超时时间
+      test-while-idle: true   #建议配置为true，不影响性能，并且保证安全性，如果空闲时间大于timeBetweenEvictionRunsMillis，执行validationQuery检测连接是否有效。
+      test-on-borrow: false   #降低性能
+      test-on-return: false   #降低性能
+      time-between-eviction-runs-millis: 60000
+      #默认 1 分钟，含义：
+      #1) Destroy线程会检测连接的间隔时间，如果连接空闲时间大于等于minEvictableIdleTimeMillis则关闭物理连接。
+      #2) testWhileIdle的判断依据，详细看testWhileIdle属性的说明
+      min-evictable-idle-time-millis: 600000    #（空闲）连接在连接池中的最小生存时间
+      max-evictable-idle-time-millis: 900000    #（空闲）连接在连接池中的最大生存时间
+      publickey: MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBAIpKjVnbAXDptrQU3OMbwPce2km65m4srzhV7lNnAKj/A7LpTR0hATkQdlCVYtHsKfxrdGNhkRcDCkPchbaaLc0CAwEAAQ==
+      filters: stat,log4j2,config
+      #StatFilter 提供了数据库连接池的监控信息统计（stat）
+      filter:
+        stat:
+          log-slow-sql: true
+          slow-sql-millis: 3000
+          merge-sql: true   #对于没有参数化的 sql（比如：select * from user where id=1 -> select * from user where id=?），合并 sql 进行统计
+        log4j2:
+          enabled: true   #使用 slf4j 输出 sql 执行过程
+          result-set-log-enabled: true
+        config:
+          enabled: true
+      connect-properties:
+        config.decrypt: true
+        config.decrypt.key: ${spring.datasource.druid.publickey}
+      #StatViewServlet 用于提供监控信息的展示的 html 页面和 JSON API，使用 Druid 内置的监控页面。
+      stat-view-servlet:
+        enabled: true
+        login-username: admin
+        login-password: admin
+        url-pattern: /druid/*   #对应的监控页面 /druid/index.html
+        reset-enable: true     #是否允许清空统计数据
+      #        allow: <ip> or <ip>/子网掩码   #监控页面访问权限白名单
+      #        deny: #监控页面访问权限黑名单，配置格式同 allow
+      #WebStatFilter用于采集web-jdbc关联监控的数据。即针对各个接口地址和其执行的 sql 操作进行统计监控，关联 url 和 sql.
+      #https://github.com/alibaba/druid/wiki/%E9%85%8D%E7%BD%AE_%E9%85%8D%E7%BD%AEWebStatFilter
+      web-stat-filter:
+        enabled: true
+        exclusions: "*.js,*.gif,*.jpg,*.png,*.css,*.ico,/druid/*"
+        session-stat-max-count: 1000  #defult 1000
+
+mybatis-plus:
+#  mapper-locations: classpath*:/mapper/*.xml
+  type-aliases-package: com.example.druidpool.dto
+  configuration:
+    map-underscore-to-camel-case: true
+  global-config:
+    db-config:
+      logic-delete-field: deleted
+      logic-delete-value: 1
+      logic-not-delete-value: 0
+      id-type: auto
+logging:
+  level:
+    com.example: debug
+

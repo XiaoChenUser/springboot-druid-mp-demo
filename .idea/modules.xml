@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/part1-quick-start/part1-quick-start.iml" filepath="$PROJECT_DIR$/part1-quick-start/part1-quick-start.iml" />
+      <module fileurl="file://$PROJECT_DIR$/part2-multi-db/part2-multi-db.iml" filepath="$PROJECT_DIR$/part2-multi-db/part2-multi-db.iml" />
+      <module fileurl="file://$PROJECT_DIR$/springboot-druid-mp-demo.iml" filepath="$PROJECT_DIR$/springboot-druid-mp-demo.iml" />
+    </modules>
+  </component>
+</project>
